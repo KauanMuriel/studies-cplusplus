@@ -1,9 +1,9 @@
 #ifndef CIRCULARLINKEDLIST
 #define CIRCULARLINKEDLIST
 
+#include <vector>
 struct Node {
     int data;
-    int key;
     Node *next;
 };
 
@@ -14,6 +14,7 @@ class CircularLinkedList {
         CircularLinkedList();
         void insert_tail(int value);
         void display();
+        std::vector<Node> to_vector(); 
 };
 
 #endif

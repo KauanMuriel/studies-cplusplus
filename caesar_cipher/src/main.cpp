@@ -1,14 +1,12 @@
 #include "../include/Encriptor.hpp"
 #include <cstdlib>
-#include <iostream>
+#include <ios>
+#include <string>
+using namespace std;
 
 int main() {
     Encriptor* encriptor = new Encriptor();
-    char string[4] = "ALA";
-    encriptor->encript(string, 4);
-    std::cout << "Encripted: " << string << "\n";
-    encriptor->decript(string, 4);
-    std::cout << "Decripted: " << string << "\n";
 
+    encriptor->encript_file("../archives/test.txt");
     return 0;
 }

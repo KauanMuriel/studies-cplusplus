@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 CircularLinkedList::CircularLinkedList() {
     head = nullptr;
@@ -30,4 +31,14 @@ void CircularLinkedList::display() {
         std::cout << currentNode->data << " ";
         currentNode = currentNode->next;
     } while (currentNode != head);
+}
+
+std::vector<Node> CircularLinkedList::to_vector() {
+    std::vector<Node> vector;
+    Node* currentNode = head;
+    do {
+        vector.push_back(*currentNode);
+        currentNode = currentNode->next;
+    } while (currentNode != head);
+    return vector;
 }
