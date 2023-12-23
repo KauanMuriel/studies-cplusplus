@@ -1,4 +1,5 @@
 #include "../include/Encriptor.hpp"
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 #include <string>
@@ -18,12 +19,15 @@ Encriptor::Encriptor() : keySequence(new CircularLinkedList()) {
 }
 
 void Encriptor::encript_file(string file_path) {
-    list<string> encryptedLines;
+    list<char*> file_lines;
     fstream file;
 
     file.open(file_path, ios::in);
     if (file.is_open()) {
-        get_encrypted_lines_from_file(&encryptedLines, file);
+        read_lines(&file_lines, file);
+        for (char* line : file_lines) {
+            encript_string(line);
+        }
         file.close();
     }
 
@@ -32,28 +36,30 @@ void Encriptor::encript_file(string file_path) {
     ofstream output_file(file_path);
 
     if (output_file.is_open()) {
-        write_encrypted_lines(&encryptedLines, output_file);
+        write_encrypted_lines(&file_lines, output_file);
         output_file.close();
     }
 }
 
-void Encriptor::encript_string(char* string, int size) {
-    change_string(string, size, 1);
+void Encriptor::encript_string(char* string) {
+    change_string(string, 1);
 }
 
-void Encriptor::decript_string(char* string, int size) {
-    change_string(string, size, -1);
+void Encriptor::decript_string(char* string) {
+    change_string(string, -1);
 }
 
 std::vector<Node> Encriptor::get_keys() {
     return keySequence->to_vector();
 }
 
-void Encriptor::change_string(char* string, int size, int keyOperation) {
+void Encriptor::change_string(char* string, int keyOperation) {
     Node* currentKey = keySequence->head;
-    for (int i = 0; i < size - 1; i++) {
+    int i = 0;
+    while (string[i] != '\0') {
         string[i] = string[i] + (keyOperation * currentKey->data);
         currentKey = currentKey->next;
+        i++;
     }
 }
 
@@ -65,17 +71,31 @@ void Encriptor::get_encrypted_lines_from_file(list<string>* encrypted_lines, fst
         int arrayLength = stringLine.length() + 1;
         arrayLine = new char[arrayLength];
         strcpy(arrayLine, stringLine.c_str());
-        encript_string(arrayLine, arrayLength);
+        encript_string(arrayLine);
         encrypted_lines->push_back(arrayLine);
     }
     delete[] arrayLine;
 }
 
-void Encriptor::write_encrypted_lines(list<string>* encrypted_lines, ofstream &output_file) {
-    for (string &line : *encrypted_lines) {
-        output_file << line << '\n';
+void Encriptor::write_encrypted_lines(list<char*>* encrypted_lines, ofstream &output_file) {
+    for (char* &line : *encrypted_lines) {
+        if (line[0] != '\0')
+            output_file << line;
+        output_file << '\n';
     }
     for (Node &key : get_keys()) {
         output_file << key.data;
+    }
+}
+
+void Encriptor::read_lines(list<char*>* lines, fstream &file) {
+    string string_line;
+
+    while (getline(file, string_line)) {
+        int array_length = string_line.length() + 1;
+        char* array_line = new char[array_length];
+        strcpy(array_line, string_line.c_str());
+        array_line[string_line.length()] = '\0';
+        lines->push_back(array_line);
     }
 }

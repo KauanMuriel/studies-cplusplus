@@ -42,3 +42,17 @@ std::vector<Node> CircularLinkedList::to_vector() {
     } while (currentNode != head);
     return vector;
 }
+
+void CircularLinkedList::clear() {
+    if (head == nullptr) return;
+
+    Node* current = head;
+
+    do {
+        Node* nextNode = current->next;
+        delete current;
+        current = nextNode;
+    } while(current != head);
+
+    head = tail = nullptr;
+}

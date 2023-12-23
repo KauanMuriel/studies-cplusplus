@@ -13,8 +13,9 @@ class CircularLinkedList {
         Node* tail;
         CircularLinkedList();
         void insert_tail(int value);
+        void clear();
         void display();
-        std::vector<Node> to_vector(); 
+        std::vector<Node> to_vector();
 };
 
 #endif
